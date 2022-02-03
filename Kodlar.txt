@@ -1,0 +1,60 @@
+import random
+
+
+_WORD_LIST = [
+    "python", "c", "java", "swift", "html", "css", "go", "ruby",
+    "javascript"]
+
+_MAX_FAILED_ATTEMPTS = 7
+
+
+def _pick_random_word():
+    return random.choice(_WORD_LIST)
+
+
+def _make_word_classified(word):
+    return ["_"] * len(word)
+
+
+def play_the_game():
+    target_word = _pick_random_word()
+    classified_word = _make_word_classified(target_word)
+    print(*classified_word)
+    attempts_left = _MAX_FAILED_ATTEMPTS
+
+    while attempts_left:
+        answer = input("Bir Harf Tahmin Et (Sadece Bir Harf Yaz)>: ").lower()
+        if len(answer) != 1:
+            print("Her seferinde sadece bir harf!")
+            continue
+
+        attempt_correct = False
+
+        for char_idx, target_char in enumerate(target_word):
+            if answer == target_char:
+                classified_word[char_idx] = answer
+                attempt_correct = True
+
+        if not attempt_correct:
+            attempts_left -= 1
+
+        if "_" not in classified_word:
+            print("Kazandın!")
+            play_again = input("Tekrar Oynamak İster Misin? (y or n)>: ").lower()
+            if play_again == "y":
+                play_the_game()
+            else:
+                return
+
+        print(*classified_word, f"\nKalan deneme sayısı: {attempts_left}")
+
+    print("Üzgünüm Kaybettin!")
+    try_again = input("Tekrar oynamak ister misin? (write y or n) >: ")
+    if try_again == "y":
+        play_the_game()
+    else:
+        print("Güle Güle!")
+
+
+if __name__ == "__main__":
+    play_the_game()
